@@ -47,15 +47,6 @@ int main(int, char const**)
     sf::Text text("Hello SFML", font, 50);
     text.setFillColor(sf::Color::Black);
 
-    // Load a music to play
-    sf::Music music;
-    if (!music.openFromFile(resourcePath() + "nice_music.ogg")) {
-        return EXIT_FAILURE;
-    }
-
-    // Play the music
-    music.play();
-
     // Start the game loop
     while (window.isOpen())
     {
