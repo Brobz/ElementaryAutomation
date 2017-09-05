@@ -13,14 +13,12 @@ Application::Application()
     WIDTH (1200),
     HEIGHT (600),
     window ({(unsigned)WIDTH, (unsigned)HEIGHT}, "Elementary Automation"),
-    pixels (WIDTH * HEIGHT)
+    rule(110),
+    cells(WIDTH * HEIGHT),
+    pixels(WIDTH * HEIGHT)
 {
     
-    forEachCell([&](int x, int y){
-        Vertex &pixel = pixels[getIndex(x,y)];
-        pixel.position = {(float) x, (float) y};
-        pixel.color = {(uint8_t)x, (uint8_t)y, 0};
-    });
+    initializeCells("1");
     
     /*/
      // Set the Icon
@@ -65,6 +63,8 @@ void Application::run()
          window.draw(text);
          /*/
         
+        tickCells();
+        
         window.draw(pixels.data(), pixels.size(), Points);
         
         // Update the window
@@ -76,10 +76,71 @@ void Application::run()
 
 };
 
+int Application::getIndex(int x)
+{
+    return current_y * WIDTH + x;
+};
+
 int Application::getIndex(int x, int y)
 {
     return y * WIDTH + x;
 };
+
+void Application::tickCells(){
+    forEachCell([&](int x){
+        string states;
+        
+        int index = getIndex(x);
+        int next_index;
+        next_index = getIndex(x, current_y + 1);
+        
+        Cell::Cell &cell = cells[index];
+        Cell::Cell &next_cell = cells[next_index];
+        
+        Vertex &pixel = pixels[next_index];
+        
+        
+        if(!x){
+            
+            states = to_string(cell.getState()) + to_string(cells[index + 1].getState()) + to_string(cells[index + 2].getState());
+            
+        }else if(x == cells.size() - 1){
+            
+            states = to_string(cells[index - 2].getState()) + to_string(cells[index - 1].getState()) + to_string(cell.getState());
+            
+        }else{
+            
+            states = to_string(cells[index - 1].getState()) + to_string(cell.getState()) + to_string(cells[index + 1].getState());
+            
+        }
+        next_cell.setState(rule.rule(states));
+        if(next_cell.getState()){
+            pixel.color = {0, 0, 0};
+        }else{
+            pixel.color = {255, 255, 255};
+        }
+        
+    });
+};
+
+void Application::initializeCells(string pattern){
+    int counter = 0;
+    for(int i = 0; i < cells.size(); i++){
+        cells[i].setState(pattern[counter] - '0');
+        counter++;
+        if(counter > pattern.length() - 1) counter = 0;
+    }
+    
+    forAllCells([&](int x, int y){
+        int index = getIndex(x, y);
+        Cell::Cell &cell = cells[index];
+        Vertex &pixel = pixels[index];
+        
+        cell.setPosition({x, y});
+        pixel.position = {(float) x, (float) y};
+        
+    });
+}
 
 void Application::pollEvents()
 {
@@ -92,12 +153,14 @@ void Application::pollEvents()
             window.close();
         }
         
-        /*/
-         // Escape pressed: exit
-         if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) {
-         window.close();
-         }
-         /*/
+        
+        if (event.type == Event::KeyPressed && event.key.code == Keyboard::Space) {
+            //Space has been (or is) pressed;
+            //tickCells();
+        }
+        
+        
+        
         
     }
 };

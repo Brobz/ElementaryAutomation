@@ -10,6 +10,8 @@
 		0A106EBC1F5E0F5A004F2BA3 /* ResourcePath.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0A106EBB1F5E0F5A004F2BA3 /* ResourcePath.mm */; };
 		0A106EBF1F5E0F5A004F2BA3 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A106EBE1F5E0F5A004F2BA3 /* main.cpp */; };
 		0A106ED01F5E1C9B004F2BA3 /* Application.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A106ECF1F5E1C9B004F2BA3 /* Application.cpp */; };
+		0A106ED31F5E28A4004F2BA3 /* Cell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A106ED21F5E28A4004F2BA3 /* Cell.cpp */; };
+		0A106ED61F5E3D7E004F2BA3 /* Rule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A106ED51F5E3D7E004F2BA3 /* Rule.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +22,10 @@
 		0A106EBE1F5E0F5A004F2BA3 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		0A106ECE1F5E1AE8004F2BA3 /* Application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Application.h; sourceTree = "<group>"; };
 		0A106ECF1F5E1C9B004F2BA3 /* Application.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Application.cpp; sourceTree = "<group>"; };
+		0A106ED11F5E261F004F2BA3 /* Cell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cell.h; sourceTree = "<group>"; };
+		0A106ED21F5E28A4004F2BA3 /* Cell.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Cell.cpp; sourceTree = "<group>"; };
+		0A106ED41F5E3C14004F2BA3 /* Rule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Rule.h; sourceTree = "<group>"; };
+		0A106ED51F5E3D7E004F2BA3 /* Rule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Rule.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +63,10 @@
 				0A106EBE1F5E0F5A004F2BA3 /* main.cpp */,
 				0A106ECF1F5E1C9B004F2BA3 /* Application.cpp */,
 				0A106ECE1F5E1AE8004F2BA3 /* Application.h */,
+				0A106ED21F5E28A4004F2BA3 /* Cell.cpp */,
+				0A106ED11F5E261F004F2BA3 /* Cell.h */,
+				0A106ED51F5E3D7E004F2BA3 /* Rule.cpp */,
+				0A106ED41F5E3C14004F2BA3 /* Rule.h */,
 				0A106EC01F5E0F5A004F2BA3 /* Resources */,
 				0A106EB91F5E0F59004F2BA3 /* Supporting Files */,
 			);
@@ -163,8 +173,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A106EBF1F5E0F5A004F2BA3 /* main.cpp in Sources */,
+				0A106ED31F5E28A4004F2BA3 /* Cell.cpp in Sources */,
 				0A106EBC1F5E0F5A004F2BA3 /* ResourcePath.mm in Sources */,
 				0A106ED01F5E1C9B004F2BA3 /* Application.cpp in Sources */,
+				0A106ED61F5E3D7E004F2BA3 /* Rule.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
