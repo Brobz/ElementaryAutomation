@@ -16,7 +16,7 @@ Application::Application()
     rule(110),
     cells(WIDTH * HEIGHT),
     pixels(WIDTH * HEIGHT),
-    button_test(Color::Magenta, Color::Cyan, "START", {300, 200}, {100, 50})
+    button_test(Color::Magenta, Color::Cyan, "START", {200, 100}, {80, 40})
 {
     
     initializeCells("1");
