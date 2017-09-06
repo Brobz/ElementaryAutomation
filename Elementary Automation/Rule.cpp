@@ -13,13 +13,11 @@ const array<string, 8> Rule::PATTERNS = {"111", "110", "101", "100", "011", "010
 Rule::Rule(int ruleID){
     decimalID = ruleID;
     binaryID = getBinary(ruleID);
-    cout << decimalID << endl;
 }
 
 Rule::Rule(string ruleID){
     binaryID = ruleID;
     decimalID = getDecimal(ruleID);
-    cout << decimalID << endl;
 }
 
 int Rule::rule(string states){

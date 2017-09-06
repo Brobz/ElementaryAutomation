@@ -57,12 +57,9 @@ void Application::run()
         window.clear();
         
         /*/
-         // Draw the sprite
-         window.draw(sprite);
-         
-         // Draw the string
-         window.draw(text);
-         /*/
+        // Draw the string
+        window.draw(text);
+        /*/
         
         
         tickCells();
