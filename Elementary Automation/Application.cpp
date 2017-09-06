@@ -10,40 +10,41 @@
 
 Application::Application()
 :
-    WIDTH (1200),
-    HEIGHT (600),
+    WIDTH (800),
+    HEIGHT (500),
     window ({(unsigned)WIDTH, (unsigned)HEIGHT}, "Elementary Automation"),
     rule(110),
     cells(WIDTH * HEIGHT),
-    pixels(WIDTH * HEIGHT)
+    pixels(WIDTH * HEIGHT),
+    button_test(Color::Magenta, Color::Cyan, "START", {300, 200}, {100, 50})
 {
     
     initializeCells("1");
-    
+    button_test.setState(true);
     /*/
-     // Set the Icon
-     Image icon;
-     if (!icon.loadFromFile(resourcePath() + "icon.png")) {
-     return EXIT_FAILURE;
-     }
-     window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
-     
-     // Load a sprite to display
-     Texture texture;
-     if (!texture.loadFromFile(resourcePath() + "cute_image.jpg")) {
-     return EXIT_FAILURE;
-     }
-     Sprite sprite(texture);
-     
-     // Create a graphical text to display
-     Font font;
-     if (!font.loadFromFile(resourcePath() + "sansation.ttf")) {
-     return EXIT_FAILURE;
-     }
-     Text text("Hello SFML", font, 50);
-     text.setFillColor(Color::Black);
-     /*/
+    // Set the Icon
+    Image icon;
+    if (!icon.loadFromFile(resourcePath() + "icon.png")) {
+    return EXIT_FAILURE;
+    }
+    window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
     
+    // Load a sprite to display
+    Texture texture;
+    if (!texture.loadFromFile(resourcePath() + "cute_image.jpg")) {
+    return EXIT_FAILURE;
+    }
+    Sprite sprite(texture);
+    
+    // Create a graphical text to display
+    Font font;
+    if (!font.loadFromFile(resourcePath() + "sansation.ttf")) {
+    return EXIT_FAILURE;
+    }
+    Text text("Hello SFML", font, 50);
+    text.setFillColor(Color::Black);
+    /*/
+
     
 };
 
@@ -63,9 +64,12 @@ void Application::run()
          window.draw(text);
          /*/
         
+        
         tickCells();
         
         window.draw(pixels.data(), pixels.size(), Points);
+        
+        button_test.update(&window, (Vector2f) Mouse::getPosition(window));
         
         // Update the window
         window.display();
@@ -121,7 +125,31 @@ void Application::tickCells(){
         }
         
     });
+    
+    rollUp();
 };
+
+void Application::rollUp(){
+    current_y++;
+    if (current_y * WIDTH > cells.size()){
+        forAllCells([&](int x, int y){
+            cells[y * WIDTH + x].setState( cells[(y + 1) * WIDTH + x].getState() );
+            pixels[y * WIDTH + x].color = pixels[(y + 1) * WIDTH + x].color;
+        });
+        current_y -= 3;
+    }
+}
+
+void Application::overflow(){
+    current_y++;
+    if (current_y * WIDTH > cells.size()){
+        for(int i = 0; i < WIDTH; i++){
+            cells[i] = cells[current_y * WIDTH + i];
+            pixels[i] = pixels[current_y * WIDTH + i];
+        }
+        current_y = 0;
+    }
+}
 
 void Application::initializeCells(string pattern){
     int counter = 0;

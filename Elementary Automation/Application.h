@@ -14,7 +14,6 @@
 #include <vector>
 #include <stdlib.h>
 #include <array>
-#include <SFML/Graphics.hpp>
 
 
 // Helper Tool
@@ -23,9 +22,7 @@
 // My classes
 #include "Cell.h"
 #include "Rule.h"
-
-using namespace sf;
-using namespace std;
+#include "Button.h"
 
 class Application
 {
@@ -43,14 +40,6 @@ private:
         for(unsigned x = 0; x < WIDTH; x++){
             f(x);
         }
-        current_y++;
-        if (current_y * WIDTH > cells.size()){
-            for(int i = 0; i < WIDTH; i++){
-                cells[i] = cells[current_y * WIDTH + i];
-                pixels[i] = pixels[current_y * WIDTH + i];
-            }
-            current_y = 0;
-        }
     }
     template <typename F>
     void forAllCells(F f){
@@ -64,6 +53,8 @@ private:
     void update();
     void pollEvents();
     void tickCells();
+    void overflow();
+    void rollUp();
     const float WIDTH, HEIGHT;
     Rule rule;
     RenderWindow window;
@@ -72,6 +63,9 @@ private:
     void initializeCells(string pattern);
     int getIndex(int x);
     int getIndex(int x, int y);
+    
+    
+    Button button_test;
 };
 
 #endif /* Application_h */
