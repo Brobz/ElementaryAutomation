@@ -17,7 +17,8 @@ Application::Application()
     cells(WIDTH * HEIGHT),
     pixels(WIDTH * HEIGHT),
     app_font(),
-    button_test(Color::Magenta, Color::Cyan, UIText(app_font, "Tick Cells", Color::White, {10, 10}, 15), {10, 10}, {82, 20})
+    button_test(Color::Magenta, Color::Cyan, UIText(app_font, "Tick Cells", Color::White, {10, 10}, 15), {10, 10}, {82, 20}),
+    switch_test(Color::Red, Color::Green, Color::Green, UIText(app_font, "Switch On", Color::White, {10, 50}, 15), {10, 50}, {88, 20})
 {
     
     if(!app_font.loadFromFile(resourcePath() + "Welbut.ttf")){
@@ -27,7 +28,9 @@ Application::Application()
     initializeCells("1");
     
     (*button_test.getText()).setFont(app_font);
+    (*switch_test.getText()).setFont(app_font);
     button_test.setState(true);
+    switch_test.setState(true);
     /*/
     // Set the Icon
     Image icon;
@@ -62,7 +65,15 @@ void Application::run()
         
         button_test.update(&window, (Vector2f) Mouse::getPosition(window));
         
+        switch_test.update(&window, (Vector2f) Mouse::getPosition(window));
+        
         button_test.doIfClicked([&](){
+            for(int i = 0; i < ticksPerFrame; i++){
+                tickCells();
+            }
+        });
+        
+        switch_test.doIfClicked([&](){
             for(int i = 0; i < ticksPerFrame; i++){
                 tickCells();
             }
@@ -124,7 +135,7 @@ void Application::tickCells(){
         
     });
     
-    rollUp();
+    overflow();
 };
 
 void Application::rollUp(){
@@ -140,7 +151,7 @@ void Application::rollUp(){
 
 void Application::overflow(){
     current_y++;
-    if (current_y * WIDTH > cells.size()){
+    if (current_y * (WIDTH + 2) > cells.size()){
         for(int i = 0; i < WIDTH; i++){
             cells[i] = cells[current_y * WIDTH + i];
             pixels[i] = pixels[current_y * WIDTH + i];
@@ -180,9 +191,14 @@ void Application::pollEvents()
         }
         
         
-        if (event.type == Event::KeyPressed && event.key.code == Keyboard::Space) {
-            //Space has been (or is) pressed;
-            //tickCells();
+        if ( event.type == event.MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
+            left_mouse_button_down = false;
+        }
+        
+        
+        if ( event.type == event.MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
+            left_mouse_button_down = true;
+            switch_test.checkIfClicked(left_mouse_button_down);
         }
         
         

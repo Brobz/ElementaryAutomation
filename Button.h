@@ -21,6 +21,7 @@ public:
     Button(Texture* rest_texture, Texture* hover_texture, Vector2f position);
     Button(Color rest_color, Color hover_color, UIText text, Vector2f position, Vector2f size);
     bool isHovered (Vector2f mouse_pos);
+    bool isHovered ();
     template <typename F>
     void doIfClicked (F f){
         if(hovered && Mouse::isButtonPressed(Mouse::Left)) f();
@@ -34,7 +35,13 @@ public:
     void setHoverSprite(Sprite* new_sprite);
     UIText* getText();
     void update(RenderWindow* window, Vector2f mouse_pos);
-    void render(RenderWindow* window);
+    virtual void render(RenderWindow* window);
+    RectangleShape* getRect();
+    void setRect(RectangleShape* new_rect);
+    void setRestColor(Color new_rest_color);
+    Color getRestColor();
+    void setHoverColor(Color new_hover_color);
+    Color getHoverColor();
 private:
     UIText text;
     RectangleShape rect;

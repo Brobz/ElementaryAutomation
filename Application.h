@@ -22,7 +22,7 @@
 // My classes
 #include "Cell.h"
 #include "Rule.h"
-#include "Button.h"
+#include "Switch.h"
 
 class Application
 {
@@ -67,6 +67,8 @@ private:
     int ticksPerFrame = 2;
     
     Button button_test;
+    Switch switch_test;
+    bool left_mouse_button_down;
 };
 
 #endif /* Application_h */

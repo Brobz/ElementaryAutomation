@@ -94,3 +94,27 @@ void Button::setText(UIText* new_text){
     text = *new_text;
 }
 
+bool Button::isHovered(){
+    return hovered;
+}
+
+RectangleShape* Button::getRect(){
+    return &rect;
+}
+
+void Button::setRect(RectangleShape* new_rect){
+    rect = *new_rect;
+}
+
+void Button::setRestColor(Color new_rest_color){
+    rest_color = new_rest_color;
+}
+Color Button::getRestColor(){
+    return rest_color;
+}
+void Button::setHoverColor(Color new_hover_color){
+    hover_color = new_hover_color;
+}
+Color Button::getHoverColor(){
+    return hover_color;
+}
