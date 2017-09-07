@@ -16,15 +16,17 @@ Application::Application()
     rule(110),
     cells(WIDTH * HEIGHT),
     pixels(WIDTH * HEIGHT),
-    button_test(Color::Magenta, Color::Cyan, "gay", {100, 50}, {50, 25}, app_font)
+    app_font(),
+    button_test(Color::Magenta, Color::Cyan, UIText(app_font, "Tick Cells", Color::White, {10, 10}, 15), {10, 10}, {82, 20})
 {
     
     if(!app_font.loadFromFile(resourcePath() + "Welbut.ttf")){
         return EXIT_FAILURE;
     }
+    
     initializeCells("1");
     
-    button_test.setFont(&app_font);
+    (*button_test.getText()).setFont(app_font);
     button_test.setState(true);
     /*/
     // Set the Icon
@@ -60,8 +62,13 @@ void Application::run()
         
         button_test.update(&window, (Vector2f) Mouse::getPosition(window));
         
-        button_test.doIfClicked([&](){tickCells();});
-
+        button_test.doIfClicked([&](){
+            for(int i = 0; i < ticksPerFrame; i++){
+                tickCells();
+            }
+        });
+        
+        
         // Update the window
         window.display();
         
@@ -122,7 +129,7 @@ void Application::tickCells(){
 
 void Application::rollUp(){
     current_y++;
-    if (current_y * WIDTH > cells.size()){
+    if (current_y * (WIDTH + 2) > cells.size()){
         forAllCells([&](int x, int y){
             cells[y * WIDTH + x].setState( cells[(y + 1) * WIDTH + x].getState() );
             pixels[y * WIDTH + x].color = pixels[(y + 1) * WIDTH + x].color;

@@ -64,6 +64,7 @@ private:
     int getIndex(int x);
     int getIndex(int x, int y);
     Font app_font;
+    int ticksPerFrame = 2;
     
     Button button_test;
 };

@@ -8,7 +8,7 @@
 
 #include "Button.h"
 
-Button::Button(Texture* rest_texture, Texture* hover_texture, string text, Vector2f position) {
+Button::Button(Texture* rest_texture, Texture* hover_texture, Vector2f position) {
     rest_sprite.setTexture(*rest_texture);
     hover_sprite.setTexture(*hover_texture);
     rest_sprite.setPosition(position);
@@ -18,24 +18,16 @@ Button::Button(Texture* rest_texture, Texture* hover_texture, string text, Vecto
 }
 
 
-Button::Button(Color rest_color, Color hover_color, string text, Vector2f position, Vector2f size, Font font) {
+Button::Button(Color rest_color, Color hover_color, UIText text, Vector2f position, Vector2f size) {
     (*this).rest_color = rest_color;
     (*this).hover_color = hover_color;
-    (*this).font = font;
     rect.setSize(size);
     rect.setOutlineColor(Color::Black);
     rect.setOutlineThickness(2);
     rect.setPosition(position);
-    setupFont(text);
+    (*this).text = text;
 }
 
-void Button::setupFont(string text){
-    label.setFont(font);
-    label.setString(text);
-    label.setPosition(rect.getPosition().x, rect.getPosition().y);
-    label.setFillColor(Color::Black);
-    label.setCharacterSize(10);
-}
 
 bool Button::isHovered(Vector2f mouse_pos) {
     if(mouse_pos.x >= rect.getPosition().x && mouse_pos.x <= rect.getPosition().x + rect.getSize().x && mouse_pos.y >= rect.getPosition().y && mouse_pos.y <= rect.getPosition().y + rect.getSize().y){
@@ -56,7 +48,7 @@ void Button::render(RenderWindow *window){
             }else{
                 rect.setFillColor(hover_color);
                 (*window).draw(rect);
-                (*window).draw(label);
+                text.render(window, true);
             }
         }else{
             if(rest_sprite.getTexture() != NULL){
@@ -64,7 +56,7 @@ void Button::render(RenderWindow *window){
             }else{
                 rect.setFillColor(rest_color);
                 (*window).draw(rect);
-                (*window).draw(label);
+                text.render(window);
             }
         }
     }
@@ -76,10 +68,6 @@ bool Button::getState() {
 
 void Button::setState(bool new_state) {
     state = new_state;
-}
-
-void Button::setText(string text) {
-    label.setString(text);
 }
 
 Sprite* Button::getRestSprite() {
@@ -94,19 +82,15 @@ void Button::setRestSprite(Sprite* new_sprite) {
     rest_sprite = *new_sprite;
 }
 
-void Button::setHoverSprite(Sprite *new_sprite) {
+void Button::setHoverSprite(Sprite* new_sprite) {
     hover_sprite = *new_sprite;
 }
 
-Text* Button::getText() {
-    return &label;
+UIText* Button::getText() {
+    return &text;
 }
 
-Font* Button::getFont(){
-    return &font;
-}
-
-void Button::setFont(Font* new_font){
-    font = *new_font;
+void Button::setText(UIText* new_text){
+    text = *new_text;
 }
 

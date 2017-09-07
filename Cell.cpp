@@ -10,8 +10,6 @@
 
 
 Cell::Cell(){
-    setState(0);
-    setPosition(array<int, 2>{0, 0});
 }
 
 Cell::Cell(int state){
@@ -33,6 +31,7 @@ array<int, 2> Cell::getPosition(){
 }
 
 void Cell::setState(int newState){
+    
     state = newState;
 }
 

@@ -11,14 +11,15 @@
 
 #include <SFML/Graphics.hpp>
 #include "ResourcePath.hpp"
+#include "UIText.h"
 #include <iostream>
 using namespace sf;
 using namespace std;
 
 class Button {
 public:
-    Button(Texture* rest_texture, Texture* hover_texture, string text, Vector2f position);
-    Button(Color rest_color, Color hover_color, string text, Vector2f position, Vector2f size, Font font);
+    Button(Texture* rest_texture, Texture* hover_texture, Vector2f position);
+    Button(Color rest_color, Color hover_color, UIText text, Vector2f position, Vector2f size);
     bool isHovered (Vector2f mouse_pos);
     template <typename F>
     void doIfClicked (F f){
@@ -26,25 +27,22 @@ public:
     }
     void setState(bool);
     bool getState();
-    void setText(string);
+    void setText(UIText* new_text);
     Sprite* getRestSprite();
     Sprite* getHoverSprite();
-    Font* getFont();
-    void setFont(Font* new_font);
     void setRestSprite(Sprite* new_sprite);
     void setHoverSprite(Sprite* new_sprite);
-    Text* getText();
+    UIText* getText();
     void update(RenderWindow* window, Vector2f mouse_pos);
     void render(RenderWindow* window);
 private:
-    Font font;
+    UIText text;
     RectangleShape rect;
     Vector2f position;
     Sprite rest_sprite;
     Sprite hover_sprite;
     Color rest_color;
     Color hover_color;
-    Text label;
     bool state;
     bool hovered;
     void setupFont(string text);
