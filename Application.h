@@ -24,6 +24,7 @@
 #include "Rule.h"
 #include "Switch.h"
 
+
 class Application
 {
     
@@ -57,17 +58,22 @@ private:
     void rollUp();
     const float WIDTH, HEIGHT;
     Rule rule;
+    Font app_font;
     RenderWindow window;
     vector<Vertex> pixels;
     vector<Cell::Cell> cells;
     void initializeCells(string pattern);
     int getIndex(int x);
     int getIndex(int x, int y);
-    Font app_font;
     int ticksPerFrame = 2;
     
-    Button button_test;
-    Switch switch_test;
+    vector<Button::Button> buttons;
+    vector<Switch::Switch> switches;
+    
+    Button tick_button;
+    Switch switch_tick_button;
+    
+    
     bool left_mouse_button_down;
 };
 

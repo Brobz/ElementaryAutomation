@@ -16,21 +16,30 @@ Application::Application()
     rule(110),
     cells(WIDTH * HEIGHT),
     pixels(WIDTH * HEIGHT),
+    buttons(),
+    switches(),
     app_font(),
-    button_test(Color::Magenta, Color::Cyan, UIText(app_font, "Tick Cells", Color::White, {10, 10}, 15), {10, 10}, {82, 20}),
-    switch_test(Color::Red, Color::Green, Color::Green, UIText(app_font, "Switch On", Color::White, {10, 50}, 15), {10, 50}, {88, 20})
+    tick_button(Color::Black, Color::Cyan, UIText(app_font, "Tick Cells", Color::White, {10, 10}, 15), {10, 10}, {82, 20}),
+    switch_tick_button(Color::Red, Color::Green, Color::Green, UIText(app_font, "Switch On", Color::White, {10, 50}, 15), UIText(app_font, "Switch Off", Color::White, {10, 50}, 14), {10, 50}, {88, 20})
 {
     
     if(!app_font.loadFromFile(resourcePath() + "Welbut.ttf")){
         return EXIT_FAILURE;
     }
     
+    (*tick_button.getText()).setFont(app_font);
+    (*switch_tick_button.getText()).setFont(app_font);
+    (*switch_tick_button.getClickedText()).setFont(app_font);
+    tick_button.setState(true);
+    switch_tick_button.setState(true);
+    
+    buttons.push_back(tick_button);
+    switches.push_back(switch_tick_button);
+    
+    
     initializeCells("1");
     
-    (*button_test.getText()).setFont(app_font);
-    (*switch_test.getText()).setFont(app_font);
-    button_test.setState(true);
-    switch_test.setState(true);
+    
     /*/
     // Set the Icon
     Image icon;
@@ -61,24 +70,30 @@ void Application::run()
         window.clear();
         
         
+
+        
         window.draw(pixels.data(), pixels.size(), Points);
         
-        button_test.update(&window, (Vector2f) Mouse::getPosition(window));
         
-        switch_test.update(&window, (Vector2f) Mouse::getPosition(window));
         
-        button_test.doIfClicked([&](){
-            for(int i = 0; i < ticksPerFrame; i++){
-                tickCells();
-            }
-        });
         
-        switch_test.doIfClicked([&](){
-            for(int i = 0; i < ticksPerFrame; i++){
-                tickCells();
-            }
-        });
+        for (int i = 0; i < switches.size(); i++) {
+            switches[i].update(&window, (Vector2f) Mouse::getPosition(window));
+            switches[i].doIfSwitched([&](){
+                for(int j = 0; j < ticksPerFrame; j++){
+                    tickCells();
+                }
+            });
+        }
         
+        for (int i = 0; i < buttons.size(); i++) {
+            buttons[i].update(&window, (Vector2f) Mouse::getPosition(window));
+            buttons[i].doIfClicked([&](){
+                for(int j = 0; j < ticksPerFrame; j++){
+                    tickCells();
+                }
+            });
+        }
         
         // Update the window
         window.display();
@@ -198,7 +213,9 @@ void Application::pollEvents()
         
         if ( event.type == event.MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
             left_mouse_button_down = true;
-            switch_test.checkIfClicked(left_mouse_button_down);
+            for (int i = 0; i < switches.size(); i++) {
+                switches[i].checkIfClicked(left_mouse_button_down);
+            }
         }
         
         
