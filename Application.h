@@ -11,10 +11,8 @@
 
 // Libs
 #include <iostream>
-#include <vector>
 #include <stdlib.h>
 #include <array>
-
 
 // Helper Tool
 #include "ResourcePath.hpp"
@@ -22,8 +20,7 @@
 // My classes
 #include "Cell.h"
 #include "Rule.h"
-#include "Switch.h"
-
+#include "GUI.h"
 
 class Application
 {
@@ -58,23 +55,48 @@ private:
     void rollUp();
     const float WIDTH, HEIGHT;
     Rule rule;
-    Font app_font;
     RenderWindow window;
     vector<Vertex> pixels;
     vector<Cell::Cell> cells;
+    GUI GUI;
     void initializeCells(string pattern);
     int getIndex(int x);
     int getIndex(int x, int y);
-    int ticksPerFrame = 2;
-    
-    vector<Button::Button> buttons;
-    vector<Switch::Switch> switches;
-    
-    Button tick_button;
-    Switch switch_tick_button;
+    int ticksPerFrame = 3;
+    int wrappingMode = 0;
     
     
     bool left_mouse_button_down;
+    
+    
+    
+    
+    typedef void (Application::*button_function) ();
+    
+    void tickCellsBF(){
+        for(int j = 0; j < ticksPerFrame; j++){
+            tickCells();
+        }
+        return NULL;
+    }
+    
+    vector<button_function> buttonFunctions;
+    
+    typedef void (Application::*switch_function) ();
+    
+    void tickCellsSF(){
+        for(int j = 0; j < ticksPerFrame; j++){
+            tickCells();
+        }
+        return NULL;
+    }
+    
+    void changeWrappingModeSF(){
+        wrappingMode = 1;
+        return NULL;
+    }
+    
+    vector<switch_function> switchFunctions;
 };
 
 #endif /* Application_h */

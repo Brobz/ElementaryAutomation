@@ -27,7 +27,7 @@ public:
     void setColor(Color new_color);
     UIText* getClickedText();
 private:
-    bool isClicked;
+    bool isClicked = false;
     bool mouse_button_down;
     Color color;
     Sprite clickedSprite;

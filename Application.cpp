@@ -16,29 +16,15 @@ Application::Application()
     rule(110),
     cells(WIDTH * HEIGHT),
     pixels(WIDTH * HEIGHT),
-    buttons(),
-    switches(),
-    app_font(),
-    tick_button(Color::Black, Color::Cyan, UIText(app_font, "Tick Cells", Color::White, {10, 10}, 15), {10, 10}, {82, 20}),
-    switch_tick_button(Color::Red, Color::Green, Color::Green, UIText(app_font, "Switch On", Color::White, {10, 50}, 15), UIText(app_font, "Switch Off", Color::White, {10, 50}, 14), {10, 50}, {88, 20})
+    GUI()
 {
-    
-    if(!app_font.loadFromFile(resourcePath() + "Welbut.ttf")){
-        return EXIT_FAILURE;
-    }
-    
-    (*tick_button.getText()).setFont(app_font);
-    (*switch_tick_button.getText()).setFont(app_font);
-    (*switch_tick_button.getClickedText()).setFont(app_font);
-    tick_button.setState(true);
-    switch_tick_button.setState(true);
-    
-    buttons.push_back(tick_button);
-    switches.push_back(switch_tick_button);
-    
-    
+    GUI.initGUI();
     initializeCells("1");
     
+    buttonFunctions.push_back(&Application::tickCellsBF);
+    
+    switchFunctions.push_back(&Application::changeWrappingModeSF);
+    switchFunctions.push_back(&Application::tickCellsSF);
     
     /*/
     // Set the Icon
@@ -47,16 +33,6 @@ Application::Application()
     return EXIT_FAILURE;
     }
     window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
-    
-    // Load a sprite to display
-    Texture texture;
-    if (!texture.loadFromFile(resourcePath() + "cute_image.jpg")) {
-    return EXIT_FAILURE;
-    }
-    Sprite sprite(texture);
-    
-    Text text("Hello SFML", font, 50);
-    text.setFillColor(Color::Black);
     /*/
     
 };
@@ -66,6 +42,7 @@ void Application::run()
 {
     while(window.isOpen()){
         
+
         // Clear screen
         window.clear();
         
@@ -77,21 +54,17 @@ void Application::run()
         
         
         
-        for (int i = 0; i < switches.size(); i++) {
-            switches[i].update(&window, (Vector2f) Mouse::getPosition(window));
-            switches[i].doIfSwitched([&](){
-                for(int j = 0; j < ticksPerFrame; j++){
-                    tickCells();
-                }
+        for (int i = 0; i < GUI.switches.size(); i++) {
+            GUI.switches[i].update(&window, (Vector2f) Mouse::getPosition(window));
+            GUI.switches[i].doIfSwitched([&](){
+                __invoke(switchFunctions[i], this);
             });
         }
         
-        for (int i = 0; i < buttons.size(); i++) {
-            buttons[i].update(&window, (Vector2f) Mouse::getPosition(window));
-            buttons[i].doIfClicked([&](){
-                for(int j = 0; j < ticksPerFrame; j++){
-                    tickCells();
-                }
+        for (int i = 0; i < GUI.buttons.size(); i++) {
+            GUI.buttons[i].update(&window, (Vector2f) Mouse::getPosition(window));
+            GUI.buttons[i].doIfClicked([&](){
+                __invoke(buttonFunctions[i], this);
             });
         }
         
@@ -100,6 +73,9 @@ void Application::run()
         
         //Process Events
         pollEvents();
+        
+        // Reset Wrapping Mode
+        wrappingMode = 0;
     }
 
 };
@@ -150,7 +126,8 @@ void Application::tickCells(){
         
     });
     
-    overflow();
+    if(!wrappingMode) overflow();
+    else rollUp();
 };
 
 void Application::rollUp(){
@@ -160,7 +137,7 @@ void Application::rollUp(){
             cells[y * WIDTH + x].setState( cells[(y + 1) * WIDTH + x].getState() );
             pixels[y * WIDTH + x].color = pixels[(y + 1) * WIDTH + x].color;
         });
-        current_y -= 3;
+        current_y -= 1;
     }
 }
 
@@ -213,8 +190,8 @@ void Application::pollEvents()
         
         if ( event.type == event.MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
             left_mouse_button_down = true;
-            for (int i = 0; i < switches.size(); i++) {
-                switches[i].checkIfClicked(left_mouse_button_down);
+            for (int i = 0; i < GUI.switches.size(); i++) {
+                GUI.switches[i].checkIfClicked(left_mouse_button_down);
             }
         }
         
@@ -223,3 +200,5 @@ void Application::pollEvents()
         
     }
 };
+
+
