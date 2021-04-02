@@ -1,3 +1,9 @@
+// To compile on Unix using g++:
+// g++ *.cpp -o ElementaryAutomation  -lsfml-graphics -lsfml-window -lsfml-system
+
+
+---> Figure out weird crashes upon rollup
+
 -> Add TextField class
 -> Make each cell a quad instead of a pixel:
 	-> make quad sizes tweakable and adapt quantity to screen size / size
@@ -6,5 +12,3 @@
 	-> rule selection
 	-> starting configuration selection
 	-> quad sizes and colors
-
-

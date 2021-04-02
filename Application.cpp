@@ -13,19 +13,19 @@ Application::Application()
     WIDTH (800),
     HEIGHT (500),
     window ({(unsigned)WIDTH, (unsigned)HEIGHT}, "Elementary Automation"),
-    rule(110),
+    rule(30), // 110, 109
     cells(WIDTH * HEIGHT),
     pixels(WIDTH * HEIGHT),
-    GUI()
+    gui()
 {
-    GUI.initGUI();
-    initializeCells("1");
-    
+    gui.initGUI();
+    initializeCells("110110110");
+
     buttonFunctions.push_back(&Application::tickCellsBF);
-    
+
     switchFunctions.push_back(&Application::changeWrappingModeSF);
     switchFunctions.push_back(&Application::tickCellsSF);
-    
+
     /*/
     // Set the Icon
     Image icon;
@@ -34,46 +34,39 @@ Application::Application()
     }
     window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
     /*/
-    
+
 };
 
 
 void Application::run()
 {
     while(window.isOpen()){
-        
 
         // Clear screen
         window.clear();
-        
-        
 
-        
         window.draw(pixels.data(), pixels.size(), Points);
-        
-        
-        
-        
-        for (int i = 0; i < GUI.switches.size(); i++) {
-            GUI.switches[i].update(&window, (Vector2f) Mouse::getPosition(window));
-            GUI.switches[i].doIfSwitched([&](){
+
+        for (int i = 0; i < gui.switches.size(); i++) {
+            gui.switches[i].update(&window, (Vector2f) Mouse::getPosition(window));
+            gui.switches[i].doIfSwitched([&](){
                 __invoke(switchFunctions[i], this);
             });
         }
-        
-        for (int i = 0; i < GUI.buttons.size(); i++) {
-            GUI.buttons[i].update(&window, (Vector2f) Mouse::getPosition(window));
-            GUI.buttons[i].doIfClicked([&](){
+
+        for (int i = 0; i < gui.buttons.size(); i++) {
+            gui.buttons[i].update(&window, (Vector2f) Mouse::getPosition(window));
+            gui.buttons[i].doIfClicked([&](){
                 __invoke(buttonFunctions[i], this);
             });
         }
-        
+
         // Update the window
         window.display();
-        
+
         //Process Events
         pollEvents();
-        
+
         // Reset Wrapping Mode
         wrappingMode = 0;
     }
@@ -93,29 +86,29 @@ int Application::getIndex(int x, int y)
 void Application::tickCells(){
     forEachCell([&](int x){
         string states;
-        
+
         int index = getIndex(x);
         int next_index;
         next_index = getIndex(x, current_y + 1);
-        
-        Cell::Cell &cell = cells[index];
-        Cell::Cell &next_cell = cells[next_index];
-        
+
+        Cell &cell = cells[index];
+        Cell &next_cell = cells[next_index];
+
         Vertex &pixel = pixels[next_index];
-        
-        
+
+
         if(!x){
-            
+
             states = to_string(cell.getState()) + to_string(cells[index + 1].getState()) + to_string(cells[index + 2].getState());
-            
+
         }else if(x == cells.size() - 1){
-            
+
             states = to_string(cells[index - 2].getState()) + to_string(cells[index - 1].getState()) + to_string(cell.getState());
-            
+
         }else{
-            
+
             states = to_string(cells[index - 1].getState()) + to_string(cell.getState()) + to_string(cells[index + 1].getState());
-            
+
         }
         next_cell.setState(rule.rule(states));
         if(next_cell.getState()){
@@ -123,9 +116,9 @@ void Application::tickCells(){
         }else{
             pixel.color = {255, 255, 255};
         }
-        
+
     });
-    
+
     if(!wrappingMode) overflow();
     else rollUp();
 };
@@ -159,15 +152,15 @@ void Application::initializeCells(string pattern){
         counter++;
         if(counter > pattern.length() - 1) counter = 0;
     }
-    
+
     forAllCells([&](int x, int y){
         int index = getIndex(x, y);
-        Cell::Cell &cell = cells[index];
+        Cell &cell = cells[index];
         Vertex &pixel = pixels[index];
-        
+
         cell.setPosition({x, y});
         pixel.position = {(float) x, (float) y};
-        
+
     });
 }
 
@@ -181,24 +174,22 @@ void Application::pollEvents()
         if (event.type == Event::Closed) {
             window.close();
         }
-        
-        
+
+
         if ( event.type == event.MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
             left_mouse_button_down = false;
         }
-        
-        
+
+
         if ( event.type == event.MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
             left_mouse_button_down = true;
-            for (int i = 0; i < GUI.switches.size(); i++) {
-                GUI.switches[i].checkIfClicked(left_mouse_button_down);
+            for (int i = 0; i < gui.switches.size(); i++) {
+                gui.switches[i].checkIfClicked(left_mouse_button_down);
             }
         }
-        
-        
-        
-        
+
+
+
+
     }
 };
-
-

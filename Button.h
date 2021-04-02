@@ -10,7 +10,6 @@
 #define Button_h
 
 #include <SFML/Graphics.hpp>
-#include "ResourcePath.hpp"
 #include "UIText.h"
 #include <iostream>
 using namespace sf;

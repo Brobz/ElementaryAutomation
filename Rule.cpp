@@ -26,13 +26,9 @@ int Rule::rule(string states){
             return binaryID[i] - '0';
         }
     }
+
+    return 0; // Instruction pointer will never get here; This removes annoying compiler warning
 }
-
-
-int Rule::rule(array<int, 3> states){
-    
-}
-
 
 string Rule::getBinary(int n){
     string b = "00000000";
@@ -41,9 +37,9 @@ string Rule::getBinary(int n){
         b[7 - h] = '1';
         n -= pow(2,  h);
     }
-    
+
     if(n) b[7] = '1';
-    
+
     return b;
 }
 
@@ -52,6 +48,6 @@ int Rule::getDecimal(string b){
     for(int i = 0; i < b.length(); i++){
         n += (b[7 - i] - '0') * (pow(2, i));
     }
-    
+
     return n;
 }

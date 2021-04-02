@@ -14,9 +14,6 @@
 #include <stdlib.h>
 #include <array>
 
-// Helper Tool
-#include "ResourcePath.hpp"
-
 // My classes
 #include "Cell.h"
 #include "Rule.h"
@@ -24,13 +21,13 @@
 
 class Application
 {
-    
+
 public:
     Application();
-    
+
     void run();
 
-    
+
 private:
     int current_y = 0;
     template <typename F>
@@ -47,7 +44,7 @@ private:
             }
         }
     }
-    
+
     void update();
     void pollEvents();
     void tickCells();
@@ -57,45 +54,45 @@ private:
     Rule rule;
     RenderWindow window;
     vector<Vertex> pixels;
-    vector<Cell::Cell> cells;
-    GUI GUI;
+    vector<Cell> cells;
+    GUI gui;
     void initializeCells(string pattern);
     int getIndex(int x);
     int getIndex(int x, int y);
     int ticksPerFrame = 3;
     int wrappingMode = 0;
-    
-    
+
+
     bool left_mouse_button_down;
-    
-    
-    
-    
+
+
+
+
     typedef void (Application::*button_function) ();
-    
+
     void tickCellsBF(){
         for(int j = 0; j < ticksPerFrame; j++){
             tickCells();
         }
-        return NULL;
+        return;
     }
-    
+
     vector<button_function> buttonFunctions;
-    
+
     typedef void (Application::*switch_function) ();
-    
+
     void tickCellsSF(){
         for(int j = 0; j < ticksPerFrame; j++){
             tickCells();
         }
-        return NULL;
+        return;
     }
-    
+
     void changeWrappingModeSF(){
         wrappingMode = 1;
-        return NULL;
+        return;
     }
-    
+
     vector<switch_function> switchFunctions;
 };
 

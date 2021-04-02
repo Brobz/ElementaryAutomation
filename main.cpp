@@ -20,11 +20,11 @@
 
 int main(int, char const**)
 {
-    
+
     // Create App class instance
     Application app;
-    
-    
+
+
     // Start the main loop
     app.run();
 

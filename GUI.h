@@ -14,9 +14,9 @@
 class GUI {
 public:
     Font app_font;
-    vector<Button::Button> buttons;
-    vector<Switch::Switch> switches;
-    
+    vector<Button> buttons;
+    vector<Switch> switches;
+
     void initGUI();
 };
 

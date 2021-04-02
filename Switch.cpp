@@ -23,9 +23,6 @@ void Switch::checkIfClicked(bool mouse_down){
     if(isHovered()){
         if(mouse_down){
             isClicked = !isClicked;
-            Color r_color = getRestColor();
-            setRestColor(getHoverColor());
-            setHoverColor(r_color);
         }
     }
 }
@@ -41,7 +38,7 @@ void Switch::render(sf::RenderWindow *window){
                 if(isClicked) clicked_text.render(window, true);
                 else (*getText()).render(window, true);
             }
-            
+
         }else if(isClicked){
             if((*getClickedSprite()).getTexture() != NULL){
                 (*window).draw((*getClickedSprite()));

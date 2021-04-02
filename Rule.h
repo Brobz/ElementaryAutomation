@@ -8,7 +8,7 @@
 
 #ifndef Rule_h
 #define Rule_h
-#include <Cell.h>
+#include "Cell.h"
 #include <string>
 #include <math.h>
 
@@ -16,12 +16,11 @@
 class Rule{
 
     static const array<string, 8> PATTERNS;
-    
+
 public:
     Rule(int ruleID);
     Rule(string ruleID);
     int rule(string states);
-    int rule(array<int, 3> states);
 private:
     string binaryID;
     int decimalID;
