@@ -31,7 +31,6 @@ array<int, 2> Cell::getPosition(){
 }
 
 void Cell::setState(int newState){
-    
     state = newState;
 }
 

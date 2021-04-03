@@ -13,13 +13,13 @@ Application::Application()
     WIDTH (800),
     HEIGHT (500),
     window ({(unsigned)WIDTH, (unsigned)HEIGHT}, "Elementary Automation"),
-    rule(30), // 110, 109
+    rule(73), // 110, 109
     cells(WIDTH * HEIGHT),
     pixels(WIDTH * HEIGHT),
     gui()
 {
     gui.initGUI();
-    initializeCells("110110110");
+    initializeSingleCell();
 
     buttonFunctions.push_back(&Application::tickCellsBF);
 
@@ -97,15 +97,15 @@ void Application::tickCells(){
         Vertex &pixel = pixels[next_index];
 
 
-        if(!x){
+        if(!x){ // Left-most cell
 
-            states = to_string(cell.getState()) + to_string(cells[index + 1].getState()) + to_string(cells[index + 2].getState());
+            states = to_string(cells[index + WIDTH - 1].getState()) + to_string(cell.getState()) + to_string(cells[index + 1].getState());
 
-        }else if(x == cells.size() - 1){
+        }else if(x == WIDTH - 1){ // Right-most cell
 
-            states = to_string(cells[index - 2].getState()) + to_string(cells[index - 1].getState()) + to_string(cell.getState());
+            states = to_string(cells[index - 1].getState()) + to_string(cell.getState()) + to_string(cells[index - WIDTH + 1].getState());
 
-        }else{
+        }else{ // Any other cell
 
             states = to_string(cells[index - 1].getState()) + to_string(cell.getState()) + to_string(cells[index + 1].getState());
 
@@ -127,8 +127,9 @@ void Application::rollUp(){
     current_y++;
     if (current_y * (WIDTH + 2) > cells.size()){
         forAllCells([&](int x, int y){
-            cells[y * WIDTH + x].setState( cells[(y + 1) * WIDTH + x].getState() );
-            pixels[y * WIDTH + x].color = pixels[(y + 1) * WIDTH + x].color;
+            if(y == HEIGHT - 1) return;
+            cells[getIndex(x, y)].setState( cells[getIndex(x, y + 1)].getState() );
+            pixels[getIndex(x, y)].color = pixels[getIndex(x, y + 1)].color;
         });
         current_y -= 1;
     }
@@ -138,16 +139,35 @@ void Application::overflow(){
     current_y++;
     if (current_y * (WIDTH + 2) > cells.size()){
         for(int i = 0; i < WIDTH; i++){
-            cells[i] = cells[current_y * WIDTH + i];
-            pixels[i] = pixels[current_y * WIDTH + i];
+            cells[i] = cells[getIndex(i)];
+            pixels[i] = pixels[getIndex(i)];
         }
         current_y = 0;
     }
 }
 
+
+void Application::initializeSingleCell(){
+
+    for(int i = 0; i < WIDTH; i++){
+        cells[i].setState(0);
+        if(i == WIDTH / 2) cells[i].setState(1);
+    }
+
+    forAllCells([&](int x, int y){
+        int index = getIndex(x, y);
+        Cell &cell = cells[index];
+        Vertex &pixel = pixels[index];
+
+        cell.setPosition({x, y});
+        pixel.position = {(float) x, (float) y};
+
+    });
+}
+
 void Application::initializeCells(string pattern){
     int counter = 0;
-    for(int i = 0; i < cells.size(); i++){
+    for(int i = 0; i < WIDTH; i++){
         cells[i].setState(pattern[counter] - '0');
         counter++;
         if(counter > pattern.length() - 1) counter = 0;

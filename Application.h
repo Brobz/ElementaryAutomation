@@ -56,6 +56,7 @@ private:
     vector<Vertex> pixels;
     vector<Cell> cells;
     GUI gui;
+    void initializeSingleCell();
     void initializeCells(string pattern);
     int getIndex(int x);
     int getIndex(int x, int y);
